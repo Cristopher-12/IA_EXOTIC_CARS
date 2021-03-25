@@ -2,6 +2,7 @@ import web
 import tensorflow.keras
 from PIL import Image, ImageOps
 import numpy as np
+import json
 
 urls = ('/upload', 'Upload')
 
@@ -59,7 +60,7 @@ class Upload ():
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 # Replace this with the path to your image
-        image = Image.open('/static/'+filename)
+        image = Image.open('/workspace/IA_EXOTIC_CARS/static/'+filename)
 
 #resize the image to a 224x224 with the same strategy as in TM2:
 #resizing the image to be at least 224x224 and then cropping from the center
@@ -95,10 +96,23 @@ class Upload ():
             
             else:
                 auto="Auto no reconocido"
-            return auto
+            return json.dumps(datos)
 
             
+ datos = {
+            titulo: [
+            ]
+        }
+
+        car = {}
+        car["resultado"] = resultado
+        car["descripcion"] = descripcion
+        car["status"] = status
+        datos[titulo].append(car)
+        return json.dumps(datos)
+
 
 if __name__ == "__main__":
     app = web.application(urls,globals())
     app.run()
+    
